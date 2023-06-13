@@ -107,16 +107,16 @@ function searchYoutubeLink(){
 function searchDifficulty(){
   difficulty="$1"
   machine_names="$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B5 | grep name | awk 'NF{print $NF}' | tr -d '"' | tr -d ',' | column)"
-  if [ "$dificulty" == "Insane" ]; then
+  if [ "$difficulty" == "Insane" ]; then
     echo -e "\n${grayColour}[+] Dificultad: ${endColour} ${purpleColour}$difficulty${endColour}\n"
     echo -e "\n$machine_names\n"
-  elif [ "$dificulty" == "Difícil" ]; then
+  elif [ "$difficulty" == "Difícil" ]; then
     echo -e "\n${grayColour}[+] Dificultad: ${endColour} ${turquoiseColour}$difficulty${endColour}\n"
     echo -e "\n$machine_names\n"
-  elif [ "$dificulty" == "Media" ]; then
+  elif [ "$difficulty" == "Media" ]; then
     echo -e "\n${grayColour}[+] Dificultad: ${endColour} ${yellowColour}$difficulty${endColour}\n"
     echo -e "\n$machine_names\n"
-  elif [ "$dificulty" == "Fácil" ]; then
+  elif [ "$difficulty" == "Fácil" ]; then
     echo -e "\n${grayColour}[+] Dificultad: ${endColour} ${greenColour}$difficulty${endColour}\n"
     echo -e "\n$machine_names\n"
   else
