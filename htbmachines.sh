@@ -20,11 +20,16 @@ function ctrl_c() {
 }
 
 function helpPanel(){
+  echo -e "\n${yellowColour}[!]${endColour} ${grayColour}Asegurese de realizar la actualización al iniciar por primera vez el programa con el parámetro -u${endColour}\n" 
   echo -e "\n${yellowColour}[+]${endColour} ${grayColour}Use:${endColour}\n" 
   echo -e "\t${purpleColour}u)${endColour} ${grayColour}Descargar o actualizar archivos necesarios${endColour}"
   echo -e "\t${purpleColour}m)${endColour} ${grayColour}Buscar por un nombre de máquina${endColour}"
   echo -e "\t${purpleColour}i)${endColour} ${grayColour}Busqueda por dirección IP${endColour}"
-  echo -e "\t${purpleColour}d)${endColour} ${grayColour}Buscar por dificultad${endColour}"
+  echo -e "\t${purpleColour}d)${endColour} ${grayColour}Buscar por dificultad:${endColour}"
+  echo -e "\t\t${grayColour}1)${endColour} ${purpleColour}Insane${endColour}"
+  echo -e "\t\t${grayColour}2)${endColour} ${redColour}Difícil${endColour}"
+  echo -e "\t\t${grayColour}3)${endColour} ${yellowColour}Media${endColour}"
+  echo -e "\t\t${grayColour}4)${endColour} ${greenColour}Fácil${endColour}"
   echo -e "\t${purpleColour}o)${endColour} ${grayColour}Busqueda por sistema operativo${endColour}"
   echo -e "\t${purpleColour}s)${endColour} ${grayColour}Busqueda por skill${endColour}"  
   echo -e "\t${purpleColour}h)${endColour} ${grayColour}Mostrar este panel de ayuda${endColour}\n"
@@ -105,7 +110,7 @@ function searchYoutubeLink(){
 }
 
 function searchDifficulty(){
-  difficulty="$1"
+  fromNumberToWord $1
   machine_names="$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B5 | grep name | awk 'NF{print $NF}' | tr -d '"' | tr -d ',' | column)"
   if [ "$difficulty" == "Insane" ]; then
     echo -e "\n${grayColour}[+] Dificultad: ${endColour} ${purpleColour}$difficulty${endColour}\n"
@@ -139,8 +144,8 @@ function searchOperativeSystem(){
 }
 
 function searchSODifficulty(){
-  so="$1"
-  difficulty="$2"
+  so="$1" 
+  fromNumberToWord $2
   machine_names="$(cat bundle.js | grep "dificultad: \"$difficulty\"" -B5 | grep "so: \"$so\"" -B4 | grep name | awk 'NF{print $NF}' | tr -d '"' | tr -d ',' | column)"
   if [ "$machine_names" ]; then
     echo -e "\n${grayColour}[+] Filtrando por SO: ${endColour} ${blueColour}$so${endColour} ${grayColour} y dificultad: ${endColour} ${redColour}$difficulty${endColour}\n"
@@ -159,6 +164,38 @@ function searchSkill(){
     echo -e "\n$machine_names\n"
   else
     echo -e "\n${redColour} [!] La(s) skill(s) introducidas no existe(n)${endColour}\n"
+  fi
+}
+
+function fromNumberToWord(){
+  wordNumber $1
+  status=$?
+  if [ "$status" -eq 0 ]; then
+    return 0
+  else
+    if [ $difficulty -eq 1 ]; then
+      difficulty="Insane"
+    elif [ $difficulty -eq 2 ]; then
+      difficulty="Difícil"
+    elif [ $difficulty -eq 3 ]; then
+      difficulty="Media"
+    elif [ $difficulty -eq 4 ]; then
+      difficulty="Fácil"
+    else
+      echo -e "\n${redColour}[!] La dificultad introducida no existe${endColour}\n"
+    fi 
+    return 1
+  fi
+}
+
+function wordNumber(){
+
+  argument="$1"
+
+  if [[ $argument =~ ^[0-9]+$ ]]; then
+    return 1
+  else
+    return 0
   fi
 }
 
